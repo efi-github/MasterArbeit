@@ -1,7 +1,7 @@
-### Masterarbeit
+# Masterarbeit
 
 
-# Fragen Tim 10 May 2024:
+### Fragen Tim 10 May 2024:
 
 - (1) Wie ist die Label verteilung bei multi-label und binary?
 - (2) Wie funktioniert auto model for sequence classification mit GPT/anderen generativen modellen?
@@ -11,7 +11,7 @@
 - (6) Mehr datensätze auch mit kürzeren context sizes:
 - (7) Alle wahlen (lr, lora einstellungen etc.) mit litheratur belegen
 
-# Antworten:
+### Antworten:
 
 (1) Die Label Verteilung ist bei multi-label und binary wie folgt:
 **TODO**
