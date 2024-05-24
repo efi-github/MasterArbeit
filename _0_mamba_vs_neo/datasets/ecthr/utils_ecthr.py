@@ -125,11 +125,18 @@ def binary_label(example):
     return {'labels': 1 if len(labels) > 0 else 0}
 
 
+def frequency_threshold_labels(example, frequency_threshold, frequencies):
+    labels = example['labels']
+    return {'labels': [l for l in labels if frequencies[l] >= frequency_threshold]}
+
+
 def load_ecthr_dataset(
         allegations: bool = True,
         silver: bool = False,
         is_multi_label: bool = True,
+        frequency_threshold: int = 0
 ):
+    frequencies = {}
     if allegations:
         dataset = load_dataset("ecthr_cases", "alleged-violation-prediction", trust_remote_code=True)
     else:
@@ -137,6 +144,19 @@ def load_ecthr_dataset(
 
     partial_join_facts = partial(join_facts, silver=silver)
     dataset = dataset.map(partial_join_facts)
+
+    for set in dataset:
+        for example in dataset[set]:
+            label = example['labels']
+            if type(label) == int:
+                label = [label]
+            for l in label:
+                if l not in frequencies:
+                    frequencies[l] = 0
+                frequencies[l] += 1
+
+    partial_frequency_threshold = partial(frequency_threshold_labels, frequency_threshold=frequency_threshold, frequencies=frequencies)
+    dataset = dataset.map(partial_frequency_threshold)
 
     if is_multi_label:
         dataset = dataset.map(multi_label)
@@ -151,6 +171,18 @@ def load_ecthr_dataset(
 
     return dataset
 
+def tokenize_dataset(dataset, tokenizer, max_length=-1):
+    def tokenize_function_truncate(examples, max_length=max_length):
+        return tokenizer(examples['facts'], truncation=True, max_length=max_length)
+
+    def tokenize_function(examples):
+        return tokenizer(examples['facts'])
+
+    if max_length >= 0:
+        tokenized_dataset = dataset.map(tokenize_function_truncate, batched=True)
+    else:
+        tokenized_dataset = dataset.map(tokenize_function, batched=True)
+    return tokenized_dataset
 
 def summarize_text_column(df, column_name, tokenizer=None):
     char_len = df[column_name].astype(str).str.len()

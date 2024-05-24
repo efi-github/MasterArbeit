@@ -10,9 +10,21 @@ class MambaForSequenceClassification(MambaModel):
     def __init__(self, config):
         super().__init__(config)
         self.num_labels = config.num_labels
-        self.classifier = nn.Linear(config.hidden_size, config.num_labels)
-        if self.classifier.bias is not None:
-            nn.init.constant_(self.classifier.bias, 0)
+        self.classifier = nn.Linear(config.hidden_size, config.num_labels, bias=False)
+        self.post_init()
+
+    def _find_last_non_pad_position(self, input_ids):
+        if self.pad_token_id is not None:
+            pad_mask = input_ids == self.pad_token_id
+            if pad_mask.any():
+                if not (~pad_mask).any():
+                    raise ValueError(f"No input found, only pad tokens, input {input_ids}")
+                last_non_pad_positions = pad_mask.size(1) - pad_mask.flip(dims=[1]).int().argmin(dim=1) - 1
+                return last_non_pad_positions
+
+        last_non_pad_positions = torch.full((input_ids.shape[0],), input_ids.size(1) - 1, dtype=torch.long,
+                                            device=input_ids.device)
+        return last_non_pad_positions
 
     def forward(
             self,
@@ -35,21 +47,13 @@ class MambaForSequenceClassification(MambaModel):
             return_dict,
         )
         hidden_states = outputs.last_hidden_state
-        if self.pad_token_id is not None and input_ids is not None:
-            pad_mask = input_ids == self.pad_token_id
-            if pad_mask.any():
-                last_non_pad_positions = pad_mask.size(1) - pad_mask.flip(dims=[1]).int().argmax(dim=1) - 1
-
-            else:
-                last_non_pad_positions = torch.full((input_ids.shape[0],), pad_mask.size(1) - 1, dtype=torch.long,
-                                                    device=input_ids.device)
-        else:
-            last_non_pad_positions = torch.full((hidden_states.shape[0],), hidden_states.shape[1] - 1, dtype=torch.long,
-                                                device=hidden_states.device)
+        last_non_pad_positions = self._find_last_non_pad_position(input_ids)
         last_hidden_states = hidden_states[torch.arange(hidden_states.size(0)), last_non_pad_positions]
         logits = self.classifier(last_hidden_states)
+        # TODO: currently we return the last hidden state ONLY, not all layers hidden states
+        # TODO: currently we dont support loss calculation
         return SequenceClassifierOutput(
             loss=None,
             logits=logits,
-            hidden_states=outputs.hidden_states,
+            hidden_states=outputs.last_hidden_state,
         )
