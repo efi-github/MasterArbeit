@@ -55,5 +55,5 @@ class MambaForSequenceClassification(MambaModel):
         return SequenceClassifierOutput(
             loss=None,
             logits=logits,
-            hidden_states=outputs.last_hidden_state,
+            hidden_states=outputs.hidden_states,
         )
