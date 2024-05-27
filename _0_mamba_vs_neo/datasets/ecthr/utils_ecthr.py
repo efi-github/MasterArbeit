@@ -113,7 +113,7 @@ def one_hot_encode(labels_list, num_classes=41):
     return one_hot_vector
 
 
-def multi_label(example):
+def multi_labely(example):
     labels = example['labels']
     labels = [ARTICLES_ID[label] for label in labels]
     labels = one_hot_encode(labels)
@@ -159,7 +159,7 @@ def load_ecthr_dataset(
     dataset = dataset.map(partial_frequency_threshold)
 
     if is_multi_label:
-        dataset = dataset.map(multi_label)
+        dataset = dataset.map(multi_labely)
     else:
         if allegations:
             print("Binary classification for allegations doesnt seem sensible, but you do you")
