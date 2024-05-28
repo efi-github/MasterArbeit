@@ -56,7 +56,7 @@ MULTI_LABEL = True
 FREQUENCY_THRESHOLD = 0
 NUM_LABELS = 41
 
-MAX_LENGTH = 512
+MAX_LENGTH = 50000
 #%%
 """
     training:
@@ -80,8 +80,8 @@ MAX_LENGTH = 512
 """
 EPOCHS = 3
 LEARNING_RATE = 2e-5
-BATCH_SIZE = 8
-GRADIENT_ACCUMULATION_STEPS = 2
+BATCH_SIZE = 1
+GRADIENT_ACCUMULATION_STEPS = 16
 print("true batch size:", BATCH_SIZE * GRADIENT_ACCUMULATION_STEPS)
 
 WARMUP_RATIO = 0.1
@@ -169,7 +169,7 @@ train = ecthr_dataset["train"]
 val = ecthr_dataset["validation"]
 test = ecthr_dataset["test"]
 #%%
-lora_config =  LoraConfig(
+lora_config = LoraConfig(
         r=LORA_R,
         target_modules=LORA_TARGET_MODULES,
         task_type=LORA_TASK_TYPE,
@@ -194,7 +194,7 @@ training_args = TrainingArguments(
     max_grad_norm= MAX_GRAD_NORM,
     per_device_train_batch_size= BATCH_SIZE,
     per_device_eval_batch_size= BATCH_SIZE_EVAL,
-    gradient_accumulation_steps= GRADIENT_ACCUMULATION_STEPS,
+    gradient_accumulation_steps= GRADIENT_ACCUMULATION_STEPS,#
     group_by_length= USE_LENGTH_GROUPING,
     num_train_epochs= EPOCHS,
     weight_decay= WEIGHT_DECAY,
