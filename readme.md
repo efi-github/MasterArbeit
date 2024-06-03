@@ -63,7 +63,7 @@ https://github.com/huggingface/transformers/blob/v4.40.2/src/transformers/models
 - r: dimension der matrix die trainiert wird
 - lora_alpha: a value to scale the lora weights by in the addition (alpha/r) is the factor.
 - lora_dropout: dropout probability of lora layers
-- arget_modules: the names of the modules to target, according to the paper, the more the better
+- target_modules: the names of the modules to target, according to the paper, the more the better
 
 (4) Teste den BCE loss zu gewichten liefen wie folgt:
 Einen test durchgeführt, er lief nicht so gut wie erwartet, die gewichtung war zu groß.
@@ -88,3 +88,15 @@ https://downloads.webis.de/pan/publications/papers/kestemont_2018.pdf
 (7) Alle wahlen (lr, lora einstellungen etc.) mit litheratur belegen:
 see _0_mamba_vs_neo/readme.md
 nochmal mit der erhöhten r zahl ausprobieren, wenn das aus der litheratur besser passt, das nehemen.
+
+
+
+### Fragen Tim 3 June 2024:
+
+- (1) Mehr datensätze (wir haben uns in zoom https://arxiv.org/pdf/2109.04712v2 und https://paperswithcode.com/sota/multi-label-text-classification-on-reuters-1)
+https://paperswithcode.com/sota/multi-label-text-classification-on-eur-lex
+- (2) Bert nochmal base hinzufügen und vergleichen
+- (3) das als motivation für die anderen modelle (problem statement)
+- (4) entscheiden für eine token länge (4k/8k) 24k is too much
+EXPOSE ^
+- (5) ansatz E5 für few shot classification ausarbeiten und nächstes mal besprechen
