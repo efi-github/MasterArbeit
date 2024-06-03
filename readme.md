@@ -75,6 +75,15 @@ see _0_mamba_vs_neo/readme.md
 (6) Mehr datensätze auch mit kürzeren context sizes:
 Eine vorherige version der daten, mit max länge 2.6k tokens: https://archive.org/details/ECHR-ACL2019
 (noch nicht getestet)
+Ideen code zu microcode, microcode zu code, könnte auch interessant sein.
+Schwierigkeiten:
+- mamba kann sich nur so viel merken, compiler anschauen wie das da gemacht wird, wie viel speicher sie brauchen.
+- kann man vielleicht ein look back implementieren?
+
+Ideen author identifikation:
+https://downloads.webis.de/pan/publications/papers/kestemont_2018.pdf
+- dafür sollte es ausreichen, vielleicht eine abwandlung des siamese networks, mit einem kleinen model zur identifikation.
+- vielleicht datetime informationen benutzen und "zeit" profile erstellen (also praktisch s)
 
 (7) Alle wahlen (lr, lora einstellungen etc.) mit litheratur belegen:
 see _0_mamba_vs_neo/readme.md
