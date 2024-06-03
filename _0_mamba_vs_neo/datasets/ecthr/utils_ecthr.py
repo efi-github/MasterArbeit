@@ -197,3 +197,4 @@ def summarize_text_column(df, column_name, tokenizer=None):
         word_len = df[column_name].astype(str).str.split().str.len()
         print(f"\nWord Lengths of '{column_name}':")
         print(word_len.describe())
+    return char_len, token_len if tokenizer else word_len

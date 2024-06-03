@@ -26,6 +26,18 @@ class MambaForSequenceClassification(MambaModel):
                                             device=input_ids.device)
         return last_non_pad_positions
 
+    def gpt2_find_last_non_pad_position(self, input_ids):
+        if self.config.pad_token_id is None:
+            sequence_lengths = -1
+        else:
+            if input_ids is not None:
+                # if no pad token found, use modulo instead of reverse indexing for ONNX compatibility
+                sequence_lengths = torch.eq(input_ids, self.config.pad_token_id).int().argmax(-1) - 1
+                sequence_lengths = sequence_lengths % input_ids.shape[-1]
+            else:
+                sequence_lengths = -1
+        return sequence_lengths
+
     def forward(
             self,
             input_ids: Optional[torch.LongTensor] = None,

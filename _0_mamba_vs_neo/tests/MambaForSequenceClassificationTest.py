@@ -47,13 +47,35 @@ class MambaForSequenceClassificationTest(unittest.TestCase):
             input_ids = torch.randint(10, 1000, (int(batch_size[0]), 10))
             # set every element after sequence_length to be 0
             for i in range(int(batch_size[0])):
-                input_ids[i, sequence_length[i]+1:] = 0
+                input_ids[i, sequence_length[i] + 1:] = 0
+            print(input_ids)
             res = obj._find_last_non_pad_position(input_ids)
+            print(res)
             assert torch.equal(res, sequence_length)
         except Exception as e:
             self.fail(f"Failed to calculate last_non_pad_positions: {e}")
         print("last_non_pad_positions calculated successfully")
 
+    def test_last_gpt2_non_pad_positions(self):
+        try:
+            obj = MambaForSequenceClassification(MambaConfig())
+            obj.pad_token_id = 0
+            # generate random batch size
+            batch_size = torch.randint(1, 100, (1,))
+            # for each batch size generate random sequence length [0, 10)
+            sequence_length = torch.randint(0, 10, (int(batch_size[0]),))
+            # generate random input_ids
+            input_ids = torch.randint(10, 1000, (int(batch_size[0]), 10))
+            # set every element after sequence_length to be 0
+            for i in range(int(batch_size[0])):
+                input_ids[i, sequence_length[i] + 1:] = 0
+            print(input_ids)
+            res = obj.gpt2_find_last_non_pad_position(input_ids)
+            print(res)
+            assert torch.equal(res, sequence_length)
+        except Exception as e:
+            self.fail(f"Failed to calculate last_non_pad_positions: {e}")
+        print("last_non_pad_positions calculated successfully")
 
     def testResult(self):
         try:

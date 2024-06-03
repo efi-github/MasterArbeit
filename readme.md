@@ -13,28 +13,69 @@
 
 ### Antworten:
 
-(1) Die Label Verteilung ist bei multi-label und binary wie folgt:
-**TODO**
+(1) Die Label Verteilung ist bei 
+multi-label (allegations):
+4,5437
+1,1740
+11,1665
+3,1623
+21,1558
+6,1056
+0,623
+17,547
+12,444
+8,441
+20,187
+9,162
+19,159
+18,119
+7,81
+5,72
+23,61
+26,48
+16,42
+15,31
+35,29
+33,17
+10,16
+28,7
+13,6
+2,26
+22,15
+32,7
+37,5
+36,2
+24,1
+31,1
+34,1
+und binary wie folgt:
+print_label_distribution_binary(violation_binary["train"].to_pandas())
+[(1, 8238), (0, 762)]
+
 
 (2) Es ist auch last token pool, was bedeutet dass das embedding des letzten tokens (vor padding), 
 das embedding ist nur die hidden state des letzten layers.
 sources:
-**TODO**
+https://github.com/huggingface/transformers/blob/v4.40.2/src/transformers/models/gpt2/modeling_gpt2.py#L1599
+
 
 (3) Die Einstellungen beim Lora Adapter sind wie folgt:
-- r:
-- lora_alpha:
-- lora_dropout:
-**TODO**
+- r: dimension der matrix die trainiert wird
+- lora_alpha: a value to scale the lora weights by in the addition (alpha/r) is the factor.
+- lora_dropout: dropout probability of lora layers
+- arget_modules: the names of the modules to target, according to the paper, the more the better
 
 (4) Teste den BCE loss zu gewichten liefen wie folgt:
-**TODO**
+Einen test durchgeführt, er lief nicht so gut wie erwartet, die gewichtung war zu groß.
+Ich würde gerne zuerst oversampling probieren und dann die gewichtung nochmal abgeändert testen.
 
-(5) lora adapter bei e5-mistral-7b-instruct als vorlage für gpt neo, bei mamba nochmal in beschreibung schauen **TODO**
-**TODO**
+(5) lora adapter bei e5-mistral-7b-instruct als vorlage für gpt neo, bei mamba nochmal in beschreibung schauen.
+see _0_mamba_vs_neo/readme.md
 
 (6) Mehr datensätze auch mit kürzeren context sizes:
-**TODO**
+Eine vorherige version der daten, mit max länge 2.6k tokens: https://archive.org/details/ECHR-ACL2019
+(noch nicht getestet)
 
 (7) Alle wahlen (lr, lora einstellungen etc.) mit litheratur belegen:
-**TODO**
+see _0_mamba_vs_neo/readme.md
+nochmal mit der erhöhten r zahl ausprobieren, wenn das aus der litheratur besser passt, das nehemen.
